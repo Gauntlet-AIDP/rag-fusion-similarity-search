@@ -1,0 +1,52 @@
+name: rag-fusion-sandbox
+
+services:
+  claude-relay:
+    build: ./relay
+    image: rag-fusion-sandbox-relay:local
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 64m
+    pids_limit: 64
+    networks: [lab, egress]
+
+  app:
+    build: .
+    image: rag-fusion-sandbox-app:local
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 6g
+    pids_limit: 512
+    tmpfs:
+      - /tmp:size=512m # scratch, caches and Jupyter runtime files; the root filesystem is read-only
+    env_file: .env
+    environment:
+      HOME: /tmp
+      HF_HOME: /tmp/hf
+      XDG_CACHE_HOME: /tmp/.cache
+    depends_on:
+      claude-relay:
+        condition: service_started
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./shim:/shim:ro
+      # Code, notebooks and the letters to index, read-only.
+      - ../main.py:/work/main.py:ro
+      - ../upload.py:/work/upload.py:ro
+      - ../similarity_search.ipynb:/work/similarity_search.ipynb:ro
+      - ../RAG_fusion_101.ipynb:/work/RAG_fusion_101.ipynb:ro
+      - ../docs:/work/docs:ro
+      # Writable: manual-mode prompts and the reply cache, the FAISS index, executed notebooks.
+      - ../.manual:/work/.manual
+      - ../faiss_index:/work/faiss_index
+      - ./out:/out
+    working_dir: /work
+    networks: [lab]
+
+networks:
+  lab:
+    internal: true
+  egress: {}

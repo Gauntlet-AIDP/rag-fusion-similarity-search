@@ -1,17 +1,17 @@
-from langchain_openai import ChatOpenAI
-from langchain.prompts.prompt import PromptTemplate
-from langchain_pinecone import PineconeVectorStore
-from langchain_openai import OpenAIEmbeddings
+try:
+    from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+except ImportError:  # sandbox
+    from llm_shim import ChatOpenAI, OpenAIEmbeddings
+from langchain_core.prompts import PromptTemplate
+from langchain_community.vectorstores import FAISS
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
-os.environ["PINECONE_API_KEY"] = os.getenv("PINECONE_API_KEY")
 os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY")
 os.environ["LANGCHAIN_TRACING_V2"] = os.getenv("LANGCHAIN_TRACING_V2")
 os.environ["LANGCHAIN_PROJECT"] = os.getenv("LANGCHAIN_PROJECT")
-PINECONE_INDEX = os.getenv("PINECONE_INDEX")
 
 prompt = "How has Berkshire Hathaway's investment in Coca-cola grown?"
 
@@ -19,7 +19,7 @@ prompt = "How has Berkshire Hathaway's investment in Coca-cola grown?"
 embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
 
 # Querying the vector database for relevant docs
-document_vectorstore = PineconeVectorStore(index_name=PINECONE_INDEX, embedding=embeddings)
+document_vectorstore = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
 retriever = document_vectorstore.as_retriever()
 context = retriever.invoke(prompt)
 for doc in context:

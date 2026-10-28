@@ -169,3 +169,12 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Sandbox: secrets, local binaries, manual-mode cache, FAISS index, executed notebooks
+sandbox/.env
+sandbox/claude-helper/.token
+sandbox/claude-helper/claude-helper
+sandbox/relay/relay
+.manual/
+faiss_index/
+out/

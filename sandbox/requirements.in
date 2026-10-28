@@ -1,0 +1,25 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+# langchain 1.x family, pinned to a known-good set
+langchain-core==1.7.0
+langchain-community==0.4.2
+langchain-text-splitters==1.1.3
+langchain-huggingface==1.2.3
+langsmith==0.14.14
+faiss-cpu==1.15.1
+pypdf==6.21.3
+python-dotenv==1.2.4
+certifi==2026.10.23
+requests==2.34.2
+urllib3==2.8.0
+aiohttp==3.14.5
+# local embeddings
+sentence-transformers==6.2.0
+torch==2.14.1+cpu
+transformers==5.21.0
+huggingface-hub==1.33.0
+scipy==1.17.1
+numpy==2.4.6
+regex==2026.9.29
+# headless notebook execution only
+nbconvert==7.17.2
+ipykernel==7.2.0

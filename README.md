@@ -9,31 +9,13 @@ Master a technique that integrates relevant documents into the generation proces
 ## Prerequisites
 - Docker (for containerized usage - recommended)
 - Python 3.11 (for local setup)
-- Pinecone account (free tier is sufficient)
+- An OpenAI API key (or use the local Claude sandbox, see [sandbox/README.md](sandbox/README.md))
 
 ## Setup
 
-### 1. Create a Pinecone Index:
-Before running the application, you need to set up a Pinecone index:
+Vectors are stored locally in FAISS (`faiss_index/`), so no vector database account is needed. Set `OPENAI_API_KEY` for the original OpenAI path, or use [sandbox/README.md](sandbox/README.md) to run with no cloud accounts on the local Claude sandbox.
 
-1. Log in to your Pinecone account at https://app.pinecone.io/
-2. Navigate to the "Indexes" section and click "Create Index"
-3. Fill in the following details:
-   - Name: Choose a name for your index (e.g., "rag-project-index")
-   - Dimensions: Set to `3072`
-   - Metric: Choose `cosine`
-4. For Environment and Region:
-   - Cloud Provider: Select `aws`
-   - Region: Choose `us-east-1`
-   (Note: These last two options are required for a free instance)
-5. Click "Create Index" to confirm
-6. If you wish to run `RAG_fusion_101.ipynb` you must create a separate Pinecone index
-7. For this second index, follow the above procedure but set the `Dimensions` to `1536`, and give the index a name of your choice
-8. Make sure and enter this second index into the `.env` file
-
-Remember the names you gave to your indices, as you'll need them for the `.env` file.
-
-### 2. Set up environment variables:
+### Set up environment variables:
 - Copy the sample environment file:
   ```
   cp .env.sample .env
@@ -44,11 +26,7 @@ Remember the names you gave to your indices, as you'll need them for the `.env` 
    LANGCHAIN_API_KEY=your-secret-key
    LANGCHAIN_TRACING_V2=true
    LANGCHAIN_PROJECT=gauntlet_class_3
-   PINECONE_API_KEY=your-secret-key
-   PINECONE_INDEX=your-3072-dimension-index-name
-   PINECONE_INDEX_TWO=your-1536-dimension-index-name
   ```
-  Make sure to use the relevant index names you created for `PINECONE_INDEX` and `PINECONE_INDEX_TWO`, respectfully.
 
 ## Quick Start with Docker
 
@@ -115,7 +93,6 @@ If you prefer to run the examples locally:
 - If you encounter package issues, try updating pip: `pip install --upgrade pip`
 - Make sure all required environment variables are set in your `.env` file.
 - If you're having issues with environment variables in Docker, ensure your `.env` file is in the same directory as your `docker-compose.yml` file.
-- If you encounter issues with Pinecone, double-check that your index is created correctly and that you're using the correct API key and index name(s) in your `.env` file.
 
 ## Need Help?
 Refer to the project documentation or reach out to the learning assistant
